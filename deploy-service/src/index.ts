@@ -6,11 +6,11 @@ import simpleGit from "simple-git";
 import validate from "./utils/validation";
 import getAllfiles from "./utils/getAllfiles";
 import uploadFileToS3 from "./utils/cloudflare";
+import { createClient } from "redis";
+const publisher = createClient();
+publisher.connect();
 const app = express();
-// uploadFileToS3(
-//   "test/index.ts",
-//   "/home/kaydee/clique-host/deploy-service/dist/output/J0PR9n/deploy-service/src/index.ts"
-// );
+
 app.use(cors());
 app.use(express.json());
 
@@ -24,10 +24,11 @@ app.post("/api/deploy", async (req: Request, res: Response) => {
   const id = generate();
   await simpleGit().clone(repoUrl, path.join(__dirname, "output/" + id));
   const files = getAllfiles(path.join(__dirname, "output/" + id));
-  console.log(files);
-  files.forEach((file) => {
-    uploadFileToS3("", file);
+  files.forEach(async (file: string) => {
+    await uploadFileToS3(file.slice(__dirname.length + 1), file);
   });
+
+  publisher.lPush("build-queue", id);
   res.json({ message: "Ready", id });
 });
 

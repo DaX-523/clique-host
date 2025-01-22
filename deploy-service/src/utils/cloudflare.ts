@@ -28,5 +28,5 @@ export default async function uploadFileToS3(
       Body: uploadParams.body,
     })
     .promise();
-  console.log(response);
+  console.log(response, "uploaded");
 }
