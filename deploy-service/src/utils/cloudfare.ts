@@ -53,3 +53,45 @@ export async function downloadFromS3(prefix: string) {
 
   await Promise.all(allPromises?.filter((x) => x !== undefined));
 }
+
+export async function uploadBuildToS3(id: string) {
+  const folderPath = path.join(__dirname, "..", `output/${id}/dist`);
+
+  const files = getAllfiles(folderPath);
+  files.forEach(async (file) => {
+    await uploadFileToS3(
+      `dist/${id}/` + file.slice(folderPath.length + 1),
+      file
+    );
+  });
+}
+
+function getAllfiles(folderPath: string) {
+  let response: string[] = [];
+  const fullDirPath = fs.readdirSync(folderPath);
+  fullDirPath.forEach((file) => {
+    const fullFilePath = path.join(folderPath, file);
+    if (fs.statSync(fullFilePath).isDirectory()) {
+      response = response.concat(getAllfiles(fullFilePath));
+    } else response.push(fullFilePath);
+  });
+  return response;
+}
+
+async function uploadFileToS3(fileName: string, localFilePath: string) {
+  if (!fs.existsSync(localFilePath)) throw new Error("File Does Not Exists");
+  const fileContent = fs.createReadStream(localFilePath);
+  const uploadParams = {
+    key: fileName,
+    bucket: "clique-host",
+    body: fileContent,
+  };
+  const input = {
+    Bucket: uploadParams.bucket,
+    Key: uploadParams.key,
+    Body: uploadParams.body,
+  };
+  // const uploadCmd = new PutObjectCommand(input);
+  const response = await s3.upload(input).promise();
+  console.log("uploaded", response);
+}
