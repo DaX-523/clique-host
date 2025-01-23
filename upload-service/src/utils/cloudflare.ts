@@ -1,11 +1,18 @@
-import { S3 } from "aws-sdk";
+import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { CLOUD_FLARE_ACC_ID, CLOUD_FLARE_BUCKET_URL } from "./constants";
 import fs from "fs";
 
-const s3 = new S3({
+if (!process.env.CLOUD_FLARE_SECRET) {
+  throw new Error("CLOUD_FLARE_SECRET environment variable is required");
+}
+
+const s3 = new S3Client({
   endpoint: CLOUD_FLARE_BUCKET_URL,
-  accessKeyId: CLOUD_FLARE_ACC_ID,
-  secretAccessKey: process.env.CLOUD_FLARE_SECRET,
+  region: "auto",
+  credentials: {
+    accessKeyId: CLOUD_FLARE_ACC_ID,
+    secretAccessKey: process.env.CLOUD_FLARE_SECRET,
+  },
 });
 
 //fileName = key (for location of file inside the bucket)
@@ -21,12 +28,12 @@ export default async function uploadFileToS3(
     bucket: "clique-host",
     body: fileContent,
   };
-  const response = await s3
-    .upload({
-      Bucket: uploadParams.bucket,
-      Key: uploadParams.key,
-      Body: uploadParams.body,
-    })
-    .promise();
-  console.log(response, "uploaded");
+  const input = {
+    Bucket: uploadParams.bucket,
+    Key: uploadParams.key,
+    Body: uploadParams.body,
+  };
+  const uploadCmd = new PutObjectCommand(input);
+  const response = await s3.send(uploadCmd);
+  console.log("uploaded", response);
 }

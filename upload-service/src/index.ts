@@ -27,7 +27,7 @@ app.post("/api/deploy", async (req: Request, res: Response) => {
   files.forEach(async (file: string) => {
     await uploadFileToS3(file.slice(__dirname.length + 1), file);
   });
-
+  await new Promise((resolve) => setTimeout(resolve, 5000));
   publisher.lPush("build-queue", id);
   res.json({ message: "Ready", id });
 });
