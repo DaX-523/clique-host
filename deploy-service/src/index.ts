@@ -4,6 +4,8 @@ import buildProject from "./utils/buildProject";
 
 const subscriber = createClient();
 subscriber.connect();
+const publisher = createClient();
+publisher.connect();
 
 async function main() {
   while (true) {
@@ -12,12 +14,14 @@ async function main() {
       "build-queue",
       0
     );
-    console.log(response, `output/${response?.element}/`);
-    await downloadFromS3(`output/${response?.element}/`);
+    const id = response?.element;
+    console.log(response, `output/${id}/`);
+    await downloadFromS3(`output/${id}/`);
     console.log("downloaded");
-    await buildProject(response?.element || "");
+    await buildProject(id || "");
     console.log("built");
-    await uploadBuildToS3(response?.element || "");
+    await uploadBuildToS3(id || "");
+    await publisher.hSet("status", id as string, "deployed");
   }
 }
 main();
