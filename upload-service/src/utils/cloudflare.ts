@@ -19,18 +19,29 @@ export default async function uploadFileToS3(
   fileName: string,
   localFilePath: string
 ) {
-  if (!fs.existsSync(localFilePath)) throw new Error("File Does Not Exists");
-  const fileContent = fs.createReadStream(localFilePath);
-  const uploadParams = {
-    key: fileName,
-    bucket: "clique-host",
-    body: fileContent,
-  };
-  const input = {
-    Bucket: uploadParams.bucket,
-    Key: uploadParams.key,
-    Body: uploadParams.body,
-  };
-  const response = await s3.upload(input).promise();
-  console.log("uploaded", response);
+  try {
+    if (!fs.existsSync(localFilePath)) {
+      throw new Error(`File does not exist: ${localFilePath}`);
+    }
+
+    const fileContent = fs.createReadStream(localFilePath);
+    const uploadParams = {
+      Bucket: "clique-host",
+      Key: fileName,
+      Body: fileContent,
+    };
+
+    // Handle stream errors
+    fileContent.on("error", (error) => {
+      console.error(`Error reading file ${localFilePath}:`, error);
+      throw error;
+    });
+
+    const response = await s3.upload(uploadParams).promise();
+    console.log(`Uploaded ${fileName}:`, response);
+    return response;
+  } catch (error) {
+    console.error(`Error uploading file ${fileName}:`, error);
+    throw error;
+  }
 }
