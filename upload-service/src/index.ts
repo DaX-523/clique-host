@@ -58,7 +58,11 @@ app.use(cors());
 app.use(express.json());
 
 // Status endpoint with error handling
-app.get("/status", (async (req: Request, res: Response, next: NextFunction) => {
+app.get("/api/status", (async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const id = req.query.id;
     if (!id || typeof id !== "string") {
@@ -84,13 +88,13 @@ app.post("/api/deploy", (async (
 ) => {
   const outputPath = path.join(__dirname, "output");
   try {
-    const repoUrl = req.body.repoUrl as string;
-    if (!repoUrl) {
+    const githubUrl = req.body.githubUrl as string;
+    if (!githubUrl) {
       return res.status(400).json({ error: "Repository URL is required" });
     }
 
-    console.log(repoUrl);
-    if (!validate(repoUrl)) {
+    console.log(githubUrl);
+    if (!validate(githubUrl)) {
       return res.status(400).json({ error: "Please enter a valid URL" });
     }
 
@@ -104,7 +108,7 @@ app.post("/api/deploy", (async (
 
     // Clone repository
     try {
-      await simpleGit().clone(repoUrl, projectPath);
+      await simpleGit().clone(githubUrl, projectPath);
     } catch (gitError) {
       await cleanup(projectPath);
       return res.status(400).json({
@@ -175,8 +179,8 @@ app.use(errorHandler);
 
 // Start server with error handling
 const server = app
-  .listen(3000, () => {
-    console.log("Server is running on port 3000");
+  .listen(3300, () => {
+    console.log("Server is running on port 3300");
   })
   .on("error", (error) => {
     console.error("Failed to start server:", error);
