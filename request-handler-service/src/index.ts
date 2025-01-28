@@ -72,8 +72,8 @@ app.get("/*", async (req: Request, res: Response, next: NextFunction) => {
 app.use(errorHandler);
 
 const server = app
-  .listen(3001, () => {
-    console.log("Listening on 3001");
+  .listen(3003, () => {
+    console.log("Listening on 3003");
   })
   .on("error", (error) => {
     console.error("Failed to start server:", error);

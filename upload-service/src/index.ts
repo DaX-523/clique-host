@@ -179,8 +179,8 @@ app.use(errorHandler);
 
 // Start server with error handling
 const server = app
-  .listen(3300, () => {
-    console.log("Server is running on port 3300");
+  .listen(3001, () => {
+    console.log("Server is running on port 3001");
   })
   .on("error", (error) => {
     console.error("Failed to start server:", error);

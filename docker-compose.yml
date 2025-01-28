@@ -1,0 +1,51 @@
+version: "3.9"
+services:
+  redis:
+    image: redis:7
+    container_name: redis
+    ports:
+      - "6379:6379"
+    restart: always
+
+  upload-service:
+    build:
+      context: ./upload-service
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    depends_on:
+      - redis
+    environment:
+      - REDIS_HOST=redis
+      - R2_BUCKET=clique-host
+
+  deploy-service:
+    build:
+      context: ./deploy-service
+      dockerfile: Dockerfile
+    depends_on:
+      - redis
+    environment:
+      - REDIS_HOST=redis
+      - R2_BUCKET=clique-host
+
+  request-handler-service:
+    build:
+      context: ./request-handler-service
+      dockerfile: Dockerfile
+    ports:
+      - "3003:3003"
+    depends_on:
+      - redis
+    environment:
+      - REDIS_HOST=redis
+      - R2_BUCKET=clique-host
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - UPLOAD_SERVICE_URL=http://upload-service:3001
