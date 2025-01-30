@@ -1,8 +1,7 @@
 import type React from "react";
 import { useState } from "react";
 import axios from "axios";
-import { baseUrl } from "../constants";
-
+const baseUrl = "http://localhost:3001";
 const GitHubDeployer: React.FC = () => {
   const [githubUrl, setGithubUrl] = useState("");
   const [isLoading, setIsLoading] = useState(false);

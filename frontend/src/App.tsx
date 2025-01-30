@@ -1,17 +1,11 @@
-import type React from "react"
-import ServiceInfo from "./components/ServiceInfo"
-import GitHubDeployer from "./components/GitHubDeployer"
+// import { useState } from 'react'
+import './App.css'
+import { Landing } from './components/landing'
 
-const App: React.FC = () => {
+function App() {
   return (
-    <div className="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto">
-        <ServiceInfo />
-        <GitHubDeployer />
-      </div>
-    </div>
+      <Landing />
   )
 }
 
 export default App
-
