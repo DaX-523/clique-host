@@ -14,5 +14,8 @@
     "@aws-sdk/client-s3": "^3.733.0",
     "aws-sdk": "^2.1692.0",
     "redis": "^4.7.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.12.0"
   }
 }

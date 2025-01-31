@@ -73,8 +73,8 @@ app.get("/*", (req, res, next) => __awaiter(void 0, void 0, void 0, function* ()
 }));
 app.use(errorHandler);
 const server = app
-    .listen(3001, () => {
-    console.log("Listening on 3001");
+    .listen(3003, () => {
+    console.log("Listening on 3003");
 })
     .on("error", (error) => {
     console.error("Failed to start server:", error);
