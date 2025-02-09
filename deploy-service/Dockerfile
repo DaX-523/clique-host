@@ -1,7 +1,9 @@
-# upload-service/Dockerfile
-FROM node:18
+# deploy-service/Dockerfile
+FROM node:20
 WORKDIR /app
-COPY . .
+COPY package.json package-lock.json ./
+RUN npm i -g typescript
 RUN npm install
-CMD ["npm", "run", "start"] # Replace with your entry point
+COPY . .
+CMD npm start # Replace with your entry point
 EXPOSE 3002
