@@ -16,6 +16,7 @@ services:
     depends_on:
       - redis
     environment:
+      - REDIS_URL=${REDIS_URL}
       - REDIS_HOST=redis
       - R2_BUCKET=clique-host
 
@@ -26,6 +27,7 @@ services:
     depends_on:
       - redis
     environment:
+      - REDIS_URL=${REDIS_URL}
       - REDIS_HOST=redis
       - R2_BUCKET=clique-host
 
@@ -38,6 +40,7 @@ services:
     depends_on:
       - redis
     environment:
+      - REDIS_URL=${REDIS_URL}
       - REDIS_HOST=redis
       - R2_BUCKET=clique-host
 
@@ -48,4 +51,5 @@ services:
     ports:
       - "3000:3000"
     environment:
+      - REDIS_URL=${REDIS_URL}
       - UPLOAD_SERVICE_URL=http://upload-service:3001
