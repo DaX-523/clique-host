@@ -39,8 +39,12 @@ async function cleanup(path: string) {
 }
 
 // Initialize Redis clients with error handling
-const publisher = createClient();
-const subscriber = createClient();
+const publisher = createClient({
+  url: process.env.REDIS_URL,
+});
+const subscriber = createClient({
+  url: process.env.REDIS_URL,
+});
 
 // Handle Redis connection errors
 publisher.on("error", (err) => console.error("Redis Publisher Error:", err));

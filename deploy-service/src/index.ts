@@ -4,8 +4,12 @@ import buildProject from "./utils/buildProject";
 import fs from "fs";
 import path from "path";
 
-const subscriber = createClient();
-const publisher = createClient();
+const subscriber = createClient({
+  url: process.env.REDIS_URL,
+});
+const publisher = createClient({
+  url: process.env.REDIS_URL,
+});
 
 // Handle Redis connection errors
 subscriber.on("error", (err) => console.error("Redis Subscriber Error:", err));

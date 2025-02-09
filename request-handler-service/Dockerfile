@@ -1,10 +1,9 @@
 # request-handler-service/Dockerfile
-FROM node:18
+FROM node:20
 WORKDIR /app
-COPY . .
-RUN apt-get update && apt-get upgrade -y && \
-    apt-get install -y nodejs \
-    npm 
+COPY package.json package-lock.json ./
+RUN npm i -g typescript
 RUN npm install
-CMD "npm start" # Replace with your entry point
+COPY . .
+CMD npm start # Replace with your entry point
 EXPOSE 3003
