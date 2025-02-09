@@ -105,10 +105,7 @@ docker-compose logs -f deployment-service
 
 ---
 
-## 📜 **License**  
-MIT License (See [LICENSE](LICENSE)).  
 
----
 
 **Happy Hosting!** ✨  
 *Questions? Open an issue or DM !*  
