@@ -66,7 +66,7 @@ export async function uploadBuildToS3(id: string) {
   try {
     const folderPath = getBuildFolderPath(id);
     const files = getAllfiles(folderPath);
-
+    console.log(folderPath, files[0]);
     if (files.length === 0) {
       throw new Error(`No files found in build folder: ${folderPath}`);
     }
@@ -153,10 +153,12 @@ function getBuildFolderPath(id: string): string {
   try {
     const distPath = path.join(__dirname, "..", `output/${id}/dist`);
     const buildPath = path.join(__dirname, "..", `output/${id}/build`);
-
+    console.log("path1", distPath, buildPath);
     if (fs.existsSync(distPath)) {
+      console.log("path2", distPath, buildPath);
       return distPath;
     } else if (fs.existsSync(buildPath)) {
+      console.log("path3", distPath, buildPath);
       return buildPath;
     }
 
