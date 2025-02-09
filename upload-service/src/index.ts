@@ -58,6 +58,7 @@ Promise.all([publisher.connect(), subscriber.connect()]).catch((err) => {
 
 const app = express();
 
+//cors
 app.use(cors());
 app.use(express.json());
 
